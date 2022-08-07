@@ -18,6 +18,8 @@
 make run
 ```
 
+## HTTP サーバー経由
+
 レコード登録
 
 ```sh
@@ -28,4 +30,18 @@ curl -X POST -H "Content-Type: application/json" -d '{"record":{"value":"test"}}
 
 ```sh
 curl -X GET -H "Content-Type: application/json" -d '{"offset":1}' http://localhost:8080
+```
+
+## gprc サーバー経由
+
+レコード登録
+
+```sh
+grpcurl -plaintext -import-path ./api/v1 -proto log.proto -d '{"record":{"value": "01011101"}}' localhost:8081 log.v1.LogService/Produce
+```
+
+レコード取得
+
+```sh
+grpcurl -plaintext -import-path ./api/v1 -proto log.proto -d '{"offset":1}' localhost:8081 log.v1.LogService/Consume
 ```
