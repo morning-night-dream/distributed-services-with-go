@@ -8,3 +8,45 @@ message Record {
     bytes value = 1;
     uint64 offset = 2;
 }
+
+// protoの警告が気になったので
+// 解消するように修正しちゃう
+
+message ProduceRequest {
+    Record record = 1;
+}
+
+message ProduceStreamRequest {
+    Record record = 1;
+}
+
+message ProduceResponse {
+    uint64 offset = 1;
+}
+
+message ProduceStreamResponse {
+    uint64 offset = 1;
+}
+
+message ConsumeRequest {
+    uint64 offset = 1;
+}
+
+message ConsumeStreamRequest {
+    uint64 offset = 1;
+}
+
+message ConsumeResponse {
+    Record record = 1;
+}
+
+message ConsumeStreamResponse {
+    Record record = 1;
+}
+
+service LogService {
+    rpc Produce(ProduceRequest) returns (ProduceResponse) {}
+    rpc ProduceStream(stream ProduceStreamRequest) returns (stream ProduceStreamResponse) {}
+    rpc Consume(ConsumeRequest) returns (ConsumeResponse) {}
+    rpc ConsumeStream(ConsumeStreamRequest) returns (stream ConsumeStreamResponse) {}
+}
