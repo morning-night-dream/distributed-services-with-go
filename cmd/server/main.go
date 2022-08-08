@@ -33,6 +33,7 @@ func main() {
 		KeyFile:       config.ServerKeyFile,
 		CAFile:        config.CAFile,
 		ServerAddress: "localhost:8081",
+		Server:        true,
 	})
 	handleError(err)
 	serverCreds := credentials.NewTLS(serverTLSConfig)

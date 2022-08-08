@@ -6,6 +6,7 @@ init:
 
 .PHONY: run
 run:
+	@rm -r server-temp
 	@go run cmd/server/main.go
 
 .PHONY: proto
@@ -32,5 +33,12 @@ gencert:
 		-config=test/ca-config.json \
 		-profile=server \
 		test/server-csr.json | cfssljson -bare server
+	
+	cfssl gencert \
+		-ca=ca.pem \
+		-ca-key=ca-key.pem \
+		-config=test/ca-config.json \
+		-profile=client \
+		test/client-csr.json | cfssljson -bare client
 	
 	mv *.pem *.csr ${CONFIG_PATH}

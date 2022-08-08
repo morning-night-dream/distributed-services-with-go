@@ -37,11 +37,13 @@ curl -X GET -H "Content-Type: application/json" -d '{"offset":1}' http://localho
 レコード登録
 
 ```sh
-grpcurl -plaintext -import-path ./api/v1 -proto log.proto -d '{"record":{"value": "01011101"}}' localhost:8081 log.v1.LogService/Produce
+grpcurl -cert $HOME/.proglog/client.pem -key $HOME/.proglog/client-key.pem -cacert $HOME/.proglog/ca.pem  -import-path ./api/v1 -proto log.proto -d '{"record":{"value": "01011101"}}' localhost:8081 log.v1.LogService/Produce
 ```
 
 レコード取得
 
 ```sh
-grpcurl -plaintext -import-path ./api/v1 -proto log.proto -d '{"offset":1}' localhost:8081 log.v1.LogService/Consume
+grpcurl -cert $HOME/.proglog/client.pem -key $HOME/.proglog/client-key.pem -cacert $HOME/.proglog/ca.pem -import-path ./api/v1 -proto log.proto -d '{"offset":1}' localhost:8081 log.v1.LogService/Consume
 ```
+
+※事前に`make gencert`を実行すること
