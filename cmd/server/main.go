@@ -4,8 +4,11 @@ import (
 	"net"
 	"os"
 
+	"github.com/morning-night-dream/distributed-services-with-go/internal/config"
 	"github.com/morning-night-dream/distributed-services-with-go/internal/log"
 	"github.com/morning-night-dream/distributed-services-with-go/internal/server"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
 )
 
 func main() {
@@ -25,7 +28,16 @@ func main() {
 		CommitLog: clog,
 	}
 
-	server, err := server.NewGRPCServer(cfg)
+	serverTLSConfig, err := config.SetupTLSConfig(config.TLSConfig{
+		CertFile:      config.ServerCertFile,
+		KeyFile:       config.ServerKeyFile,
+		CAFile:        config.CAFile,
+		ServerAddress: "localhost:8081",
+	})
+	handleError(err)
+	serverCreds := credentials.NewTLS(serverTLSConfig)
+
+	server, err := server.NewGRPCServer(cfg, grpc.Creds(serverCreds))
 	handleError(err)
 
 	l, err := net.Listen("tcp", ":8081")
