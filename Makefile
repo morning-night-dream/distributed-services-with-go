@@ -18,8 +18,16 @@ proto:
 		--go-grpc_opt=paths=source_relative \
 		--proto_path=.
 
+$(CONFIG_PATH)/model.conf:
+	echo model && \
+	cp test/model.conf $(CONFIG_PATH)/model.conf
+
+$(CONFIG_PATH)/policy.csv:
+	echo policy && \
+	cp test/policy.csv $(CONFIG_PATH)/policy.csv
+
 .PHONY: test
-test:
+test: $(CONFIG_PATH)/policy.csv $(CONFIG_PATH)/model.conf 
 	go test -race ./...
 
 .PHONy: gencert
@@ -39,6 +47,15 @@ gencert:
 		-ca-key=ca-key.pem \
 		-config=test/ca-config.json \
 		-profile=client \
-		test/client-csr.json | cfssljson -bare client
+		-cn="root" \
+		test/client-csr.json | cfssljson -bare root-client
+
+	cfssl gencert \
+		-ca=ca.pem \
+		-ca-key=ca-key.pem \
+		-config=test/ca-config.json \
+		-profile=client \
+		-cn="nobody" \
+		test/client-csr.json | cfssljson -bare nobody-client
 	
 	mv *.pem *.csr ${CONFIG_PATH}
