@@ -4,6 +4,7 @@ import (
 	"net"
 	"os"
 
+	"github.com/morning-night-dream/distributed-services-with-go/internal/auth"
 	"github.com/morning-night-dream/distributed-services-with-go/internal/config"
 	"github.com/morning-night-dream/distributed-services-with-go/internal/log"
 	"github.com/morning-night-dream/distributed-services-with-go/internal/server"
@@ -24,8 +25,11 @@ func main() {
 	clog, err := log.NewLog("server-temp", log.Config{})
 	handleError(err)
 
+	authorizer := auth.New(config.ACLModelFile, config.ACLPolicyFile)
+
 	cfg := &server.Config{
-		CommitLog: clog,
+		CommitLog:  clog,
+		Authorizer: authorizer,
 	}
 
 	serverTLSConfig, err := config.SetupTLSConfig(config.TLSConfig{
