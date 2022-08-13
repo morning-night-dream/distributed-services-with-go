@@ -16,14 +16,6 @@ const (
 	entWidth        = offWidth + posWidth
 )
 
-type Config struct {
-	Segment struct {
-		MaxStoreBytes uint64
-		MaxIndexBytes uint64
-		InitialOffset uint64
-	}
-}
-
 type index struct {
 	file *os.File
 	mmap gommap.MMap

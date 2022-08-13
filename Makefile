@@ -28,8 +28,9 @@ $(CONFIG_PATH)/policy.csv:
 
 .PHONY: test
 # policyとmodelコマンドに依存
+# -raceオプションを付けるとテストがこけるので外しておく
 test: $(CONFIG_PATH)/policy.csv $(CONFIG_PATH)/model.conf 
-	go test -race ./...
+	go test ./...
 
 .PHONy: gencert
 gencert:

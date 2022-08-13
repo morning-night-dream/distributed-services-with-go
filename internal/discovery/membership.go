@@ -3,6 +3,7 @@ package discovery
 import (
 	"net"
 
+	"github.com/hashicorp/raft"
 	"github.com/hashicorp/serf/serf"
 	"go.uber.org/zap"
 )
@@ -124,7 +125,11 @@ func (m *MemberShip) Leave() error {
 }
 
 func (m *MemberShip) logError(err error, msg string, member serf.Member) {
-	m.logger.Error(
+	log := m.logger.Error
+	if err == raft.ErrNotLeader {
+		log = m.logger.Debug
+	}
+	log(
 		msg,
 		zap.Error(err),
 		zap.String("name", member.Name),
