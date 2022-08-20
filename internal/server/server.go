@@ -33,6 +33,7 @@ type Authorizer interface {
 type Config struct {
 	CommitLog  CommitLog
 	Authorizer Authorizer
+	GetServer  GetServer
 }
 
 const (
@@ -127,6 +128,20 @@ func (s *grpcServer) ConsumeStream(
 			req.Offset++
 		}
 	}
+}
+
+func (s *grpcServer) GetServers(
+	ctx context.Context, req *api.GetServersRequest,
+) (*api.GetServersResponse, error) {
+	servers, err := s.GetServer.GetServers()
+	if err != nil {
+		return nil, err
+	}
+	return &api.GetServersResponse{Servers: servers}, nil
+}
+
+type GetServer interface {
+	GetServers() ([]*api.Server, error)
 }
 
 func NewGRPCServer(config *Config, grpcOpts ...grpc.ServerOption) (*grpc.Server, error) {
