@@ -61,3 +61,13 @@ gencert:
 		test/client-csr.json | cfssljson -bare nobody-client
 	
 	mv *.pem *.csr ${CONFIG_PATH}
+
+TAG ?=v0.0.1
+
+.PHONY: build-docker
+build-docker:
+	docker build -t morningnightdream/distributed-sevice-with-go:$(TAG) .
+
+.PHONY: push-docker
+push-docker:
+	docker push morningnightdream/distributed-sevice-with-go:$(TAG) .

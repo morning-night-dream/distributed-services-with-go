@@ -1,0 +1,8 @@
+image:
+  repository: morningnightdream/distributed-sevice-with-go
+  pullPolicy: Always
+  tag: v0.0.1
+serfPort: 8401
+rpcPort: 8400
+replicas: 3
+storage: 1Gi
